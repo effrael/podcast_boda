@@ -1,0 +1,205 @@
+---
+const { headerMode = 'light' } = Astro.props;
+---
+
+<section id="experiencia" data-header={headerMode} class="video-section relative bg-cream py-24 px-10 overflow-hidden flex flex-col items-center">
+
+  <!-- Decoración: arco SVG derecha -->
+  <svg class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-[200px] h-[400px] z-[1] opacity-60"
+       viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 160 20 Q 240 200 160 380" stroke="currentColor" stroke-width="0.8" opacity="0.5" class="text-gold"/>
+  </svg>
+
+  <!-- Estrellas decorativas -->
+  <span class="star absolute text-gold z-[1] text-xl"  style="top:18%; right:22%">✦</span>
+  <span class="star absolute text-gold z-[1] text-sm"  style="top:60%; right:8%">✦</span>
+  <span class="star absolute text-gold z-[1] text-2xl" style="top:70%; left:6%">✦</span>
+  <span class="star absolute text-gold z-[1] text-xs"  style="top:30%; left:20%">✦</span>
+
+  <h2 class="video-title relative z-[2] font-moon font-normal text-[clamp(3rem,8vw,6rem)] text-[#1a1a1a] text-center mb-12">
+    Momentos que <em class="not-italic text-gold font-bold">merecen</em> quedarse
+  </h2>
+
+  <!-- Video con player personalizado -->
+  <div class="video-wrapper relative z-[2] w-full max-w-[860px] rounded-lg overflow-hidden shadow-[0_12px_50px_rgba(0,0,0,0.15)] bg-black group">
+
+    <!-- Video element: preload metadata + poster para carga rápida -->
+    <video
+      id="custom-video"
+      preload="metadata"
+      playsinline
+      class="w-full block aspect-video cursor-pointer">
+      <source src="/ec2331b6adee4e7d856faf0bb9d04808.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Play overlay grande (estado inicial) -->
+    <div id="play-overlay" class="absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity duration-300 cursor-pointer">
+      <div class="w-16 h-16 rounded-full border-2 border-white/80 flex items-center justify-center backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-colors duration-300">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white" class="ml-1">
+          <polygon points="6,3 20,12 6,21"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Controles custom -->
+    <div id="video-controls" class="absolute bottom-0 left-0 right-0 px-4 pb-3 pt-8 bg-gradient-to-t from-black/70 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none">
+
+      <!-- Barra de progreso -->
+      <div id="progress-bar" class="w-full h-[3px] bg-white/20 rounded-full mb-3 cursor-pointer pointer-events-auto relative group/bar">
+        <div id="progress-fill" class="h-full bg-gold rounded-full relative" style="width:0%">
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-gold rounded-full opacity-0 group-hover/bar:opacity-100 transition-opacity"></div>
+        </div>
+      </div>
+
+      <!-- Botones inferiores -->
+      <div class="flex items-center justify-between pointer-events-auto">
+
+        <div class="flex items-center gap-3">
+          <!-- Play/Pause -->
+          <button id="btn-play" class="text-white/90 hover:text-white transition-colors" aria-label="Reproducir">
+            <svg id="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6,3 20,12 6,21"/>
+            </svg>
+            <svg id="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="hidden">
+              <rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/>
+            </svg>
+          </button>
+
+          <!-- Tiempo -->
+          <span id="video-time" class="text-white/60 text-[0.65rem] font-light tracking-wide">0:00 / 0:00</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Mute -->
+          <button id="btn-mute" class="text-white/90 hover:text-white transition-colors" aria-label="Silenciar">
+            <svg id="icon-vol" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/>
+            </svg>
+            <svg id="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="hidden">
+              <path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+          </button>
+
+          <!-- Fullscreen -->
+          <button id="btn-fs" class="text-white/90 hover:text-white transition-colors" aria-label="Pantalla completa">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  const video     = document.getElementById('custom-video') as HTMLVideoElement;
+  const overlay   = document.getElementById('play-overlay')!;
+  const controls  = document.getElementById('video-controls')!;
+  const btnPlay   = document.getElementById('btn-play')!;
+  const iconPlay  = document.getElementById('icon-play')!;
+  const iconPause = document.getElementById('icon-pause')!;
+  const btnMute   = document.getElementById('btn-mute')!;
+  const iconVol   = document.getElementById('icon-vol')!;
+  const iconMuted = document.getElementById('icon-muted')!;
+  const btnFs     = document.getElementById('btn-fs')!;
+  const progBar   = document.getElementById('progress-bar')!;
+  const progFill  = document.getElementById('progress-fill')!;
+  const timeEl    = document.getElementById('video-time')!;
+  const wrapper   = document.querySelector('.video-wrapper') as HTMLElement;
+
+  function fmt(s: number) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+  }
+
+  function showPlaying() {
+    iconPlay.classList.add('hidden');
+    iconPause.classList.remove('hidden');
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+  }
+
+  function showPaused() {
+    iconPlay.classList.remove('hidden');
+    iconPause.classList.add('hidden');
+  }
+
+  function togglePlay() {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }
+
+  // Click overlay o video → play/pause
+  overlay.addEventListener('click', togglePlay);
+  video.addEventListener('click', togglePlay);
+
+  video.addEventListener('play', showPlaying);
+  video.addEventListener('pause', showPaused);
+
+  // Mostrar controles al hover
+  wrapper.addEventListener('mouseenter', () => {
+    if (!video.paused) {
+      controls.style.opacity = '1';
+      controls.style.pointerEvents = 'auto';
+    }
+  });
+  wrapper.addEventListener('mouseleave', () => {
+    if (!video.paused) {
+      controls.style.opacity = '0';
+      controls.style.pointerEvents = 'none';
+    }
+  });
+
+  // Siempre mostrar controles cuando está pausado
+  video.addEventListener('pause', () => {
+    controls.style.opacity = '1';
+    controls.style.pointerEvents = 'auto';
+  });
+
+  btnPlay.addEventListener('click', togglePlay);
+
+  // Progreso
+  video.addEventListener('timeupdate', () => {
+    const pct = (video.currentTime / video.duration) * 100;
+    progFill.style.width = `${pct}%`;
+    timeEl.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration || 0)}`;
+  });
+
+  // Click en barra de progreso
+  progBar.addEventListener('click', (e) => {
+    const rect = progBar.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    video.currentTime = pct * video.duration;
+  });
+
+  // Mute
+  btnMute.addEventListener('click', () => {
+    video.muted = !video.muted;
+    iconVol.classList.toggle('hidden', video.muted);
+    iconMuted.classList.toggle('hidden', !video.muted);
+  });
+
+  // Fullscreen
+  btnFs.addEventListener('click', () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      wrapper.requestFullscreen();
+    }
+  });
+
+  // Al terminar video → mostrar overlay
+  video.addEventListener('ended', () => {
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'auto';
+    showPaused();
+  });
+</script>

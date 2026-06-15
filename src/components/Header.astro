@@ -1,0 +1,184 @@
+---
+const menuItems = [
+  { label: 'Inicio',      href: '#inicio'      },
+  { label: 'Experiencia', href: '#experiencia' },
+  { label: 'Planes',      href: '#planes'      },
+  { label: 'Extras',      href: '#extras'      },
+  { label: 'Contacto',    href: '#contacto'    },
+];
+---
+
+<!-- Header -->
+<header id="site-header" class="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-7 py-4 transition-all duration-300">
+
+  <!-- Logo izquierda -->
+  <div id="header-logo-circle" class="w-[40px] md:w-[46px] h-[40px] md:h-[46px] border-2 border-white/70 rounded-full flex items-center justify-center shrink-0 p-2 transition-colors duration-300">
+    <img src="/icono.png" alt="" class="w-full  md:h-full object-contain">
+  </div>
+
+  <!-- Brand centro -->
+  <div class="flex items-center justify-center">
+    <img id="header-brand" src="https://tupodcast.pe/wp-content/uploads/2023/11/logo_tupodcast.webp" alt="Logo Principal" class="h-6 md:h-10 w-auto object-contain transition-all duration-300">
+  </div>
+
+  <!-- Burger derecha -->
+  <button id="burger-btn" aria-label="Abrir menú" class="flex flex-col justify-center items-center gap-[5px] w-10 h-10 rounded-full cursor-pointer bg-transparent border-2 border-transparent transition-all duration-300">
+    <span class="burger-line block h-[1.5px] w-5 bg-white transition-all duration-300"></span>
+    <span class="burger-line block h-[1.5px] w-3 bg-white transition-all duration-300"></span>
+    <span class="burger-line block h-[1.5px] w-5 bg-white transition-all duration-300"></span>
+  </button>
+
+</header>
+
+<!-- Menú fullscreen -->
+<div id="fullscreen-menu" class="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+
+  <!-- Cerrar -->
+  <button id="close-btn" aria-label="Cerrar menú" class="absolute top-6 right-7 w-10 h-10 rounded-full flex items-center justify-center text-white bg-black border-2 border-black cursor-pointer">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M18 6L6 18M6 6l12 12"/>
+    </svg>
+  </button>
+
+  <!-- Links -->
+  <nav class="flex flex-col items-center gap-8">
+    {menuItems.map(({ label, href }) => (
+      <a href={href} class="menu-link text-black text-[2.5rem] font-[200] tracking-wide hover:text-gold transition-colors" style="font-family:'Raleway',sans-serif;">
+        {label}
+      </a>
+    ))}
+  </nav>
+
+</div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const header     = document.getElementById('site-header')!;
+  const burgerBtn  = document.getElementById('burger-btn')!;
+  const closeBtn   = document.getElementById('close-btn')!;
+  const menu       = document.getElementById('fullscreen-menu')!;
+  const logoCircle = document.getElementById('header-logo-circle')!;
+  const lines      = document.querySelectorAll<HTMLElement>('.burger-line');
+  const brandImg   = document.getElementById('header-brand') as HTMLImageElement;
+  const iconImg    = logoCircle.querySelector('img') as HTMLImageElement;
+
+  // Inicio: sin fondo
+  applyMode('transparent');
+
+  // ── Scroll: aplicar blur cuando empieza a scrollear ──
+  ScrollTrigger.create({
+    start: 'top -1px',
+    onEnter() {
+      applyMode('blur');
+    },
+    onLeaveBack() {
+      // Volver al top: sin fondo
+      applyMode('transparent');
+    },
+  });
+
+  ScrollTrigger.create({
+    start: 'top -80px',
+    onEnter() {
+      header.classList.remove('absolute');
+      header.classList.add('fixed');
+    },
+    onLeaveBack() {
+      header.classList.add('absolute');
+      header.classList.remove('fixed');
+    },
+  });
+
+  // ── Modos de color del header ──
+  function applyMode(mode: string) {
+    // Reset blur
+    header.style.backdropFilter = '';
+    header.style.webkitBackdropFilter = '';
+
+    if (mode === 'light') {
+      // Sección clara → fondo blanco sólido, elementos negros
+      header.style.backgroundColor = '#fff';
+      header.classList.add('shadow-sm');
+      iconImg.style.filter  = 'brightness(0) saturate(100%)';
+      brandImg.style.filter = 'brightness(0) saturate(100%)';
+      logoCircle.style.borderColor = '#000';
+      burgerBtn.style.backgroundColor = '#000';
+      burgerBtn.style.borderColor = '#000';
+      lines.forEach(l => (l.style.backgroundColor = '#fff'));
+    } else if (mode === 'blur') {
+      // Sección blur → fondo semitransparente con backdrop-blur, elementos blancos
+      header.style.backgroundColor = 'rgba(0,0,0,0.35)';
+      header.style.backdropFilter = 'blur(12px)';
+      header.style.webkitBackdropFilter = 'blur(12px)';
+      header.classList.remove('shadow-sm');
+      iconImg.style.filter  = '';
+      brandImg.style.filter = '';
+      logoCircle.style.borderColor = 'rgba(255,255,255,0.7)';
+      burgerBtn.style.backgroundColor = '';
+      burgerBtn.style.borderColor = 'transparent';
+      lines.forEach(l => (l.style.backgroundColor = '#fff'));
+    } else if (mode === 'transparent') {
+      // Hero scroll → sin fondo, elementos blancos
+      header.style.backgroundColor = 'transparent';
+      header.classList.remove('shadow-sm');
+      iconImg.style.filter  = '';
+      brandImg.style.filter = '';
+      logoCircle.style.borderColor = 'rgba(255,255,255,0.7)';
+      burgerBtn.style.backgroundColor = '';
+      burgerBtn.style.borderColor = 'transparent';
+      lines.forEach(l => (l.style.backgroundColor = '#fff'));
+    } else {
+      // Sección oscura → header negro, elementos blancos
+      header.style.backgroundColor = '#000';
+      header.classList.remove('shadow-sm');
+      iconImg.style.filter  = '';
+      brandImg.style.filter = '';
+      logoCircle.style.borderColor = 'rgba(255,255,255,0.7)';
+      burgerBtn.style.backgroundColor = '';
+      burgerBtn.style.borderColor = 'transparent';
+      lines.forEach(l => (l.style.backgroundColor = '#fff'));
+    }
+  }
+
+  // ── Detectar secciones con data-header ──
+  document.querySelectorAll<HTMLElement>('[data-header]').forEach((section) => {
+    const mode = section.dataset.header!;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top+=60',
+      end: 'bottom top+=60',
+      onEnter:     () => applyMode(mode),
+      onEnterBack: () => applyMode(mode),
+    });
+  });
+
+  // ── Abrir menú fullscreen ──
+  function openMenu() {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    menu.classList.remove('pointer-events-none');
+    gsap.to(menu, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+    gsap.fromTo('.menu-link',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, stagger: 0.08, duration: 0.4, ease: 'power3.out', delay: 0.1 }
+    );
+  }
+
+  // ── Cerrar menú ──
+  function closeMenu() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    gsap.to(menu, {
+      opacity: 0, duration: 0.25, ease: 'power2.in',
+      onComplete: () => menu.classList.add('pointer-events-none'),
+    });
+  }
+
+  burgerBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  document.querySelectorAll('.menu-link').forEach(l => l.addEventListener('click', closeMenu));
+</script>

@@ -1,0 +1,115 @@
+---
+import { MicVocal, Armchair, Clapperboard } from '@lucide/astro';
+
+const extras = [
+  {
+    tag: null,
+    icon: MicVocal,
+    nombre: 'Host <br/> Profesional',
+    descripcion: 'Un entrevistador experto guía las conversaciones con preguntas cuidadosamente diseñadas para obtener las historias, consejos y emociones más auténticas.',
+    precio: '400',
+  },
+  {
+    tag: 'Más  solicitado',
+    icon: Armchair,
+    nombre: 'Set Lounge<br/> Premium',
+    descripcion: 'Creamos una sala elegante con mobiliario blanco, decoración e iluminación para integrarla perfectamente a la ambientación de tu boda.',
+    precio: '1,500',
+  },
+  {
+    tag: null,
+    icon: Clapperboard,
+    nombre: 'Pack de 10 <br/> Clips Virales',
+    descripcion: 'Los momentos más emotivos y divertidos convertidos en videos cortos (hasta 1 min), listos para Instagram, TikTok y Reels.',
+    precio: '1,000',
+  },
+];
+const { headerMode = 'dark' } = Astro.props;
+---
+
+<section id="extras" data-header={headerMode} class="relative bg-[#0f0f0f] py-28 px-6 overflow-hidden">
+
+  <!-- Fondo -->
+  <img src="/img_3.webp" alt="" class="absolute inset-0 w-full h-full object-cover opacity-50" />
+  <div class="absolute inset-0 bg-gradient-to-b from-[#0f0f0f]/70 via-transparent to-[#0f0f0f]/80"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <p class="extras-el text-gold text-2xl font-semibold font-moon mb-2">Extras</p>
+      <h2 class="extras-el text-cream font-[200] text-[clamp(2rem,5vw,3.5rem)] tracking-tight uppercase">
+        Personaliza <em class="not-italic text-gold italic">tu</em> experiencia
+      </h2>
+      <p class="extras-el text-cream/90 font-light text-base mt-4">
+        Lleva tu <span class="text-gold italic font-semibold">Podcast de Boda</span> al siguiente nivel.
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {extras.map((extra) => (
+        <div class="extras-el relative flex flex-col items-center text-center bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-7 pt-10 pb-8 gap-5">
+
+          {extra.tag && (
+            <div class="absolute -top-3.5">
+              <span class="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] text-black text-[0.55rem] tracking-[0.15em] uppercase px-4 py-1.5 font-normal rounded-full">
+                {extra.tag}
+              </span>
+            </div>
+          )}
+
+          <div class="w-14 h-14 rounded-full p-[1.5px] bg-gradient-to-br from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-[#0f0f0f] flex items-center justify-center">
+              <extra.icon size={24} stroke="url(#extras-gold-gradient)" />
+            </div>
+          </div>
+
+          <h3 class="text-cream font-[400] text-md tracking-[0.15em] uppercase leading-snug" set:html={extra.nombre} />
+
+          <p class="text-cream/90 text-base">
+            {extra.descripcion}
+          </p>
+
+          <div class="mt-auto pt-4 border-t border-gold/10 w-full">
+            <div class="flex items-baseline justify-center gap-1">
+              <span class="text-cream/60 text-sm font-light">S/</span>
+              <span class="font-bold text-4xl tracking-tight bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] bg-clip-text text-transparent">{extra.precio}</span>
+            </div>
+          </div>
+
+        </div>
+      ))}
+    </div>
+
+    <!-- SVG gradient definition -->
+    <svg class="absolute w-0 h-0" aria-hidden="true">
+      <defs>
+        <linearGradient id="extras-gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#BF953F" />
+          <stop offset="40%" stop-color="#FCF6BA" />
+          <stop offset="70%" stop-color="#B38728" />
+          <stop offset="100%" stop-color="#FBF5B7" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+
+
+  </div>
+
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.fromTo('.extras-el',
+    { autoAlpha: 0, y: 40 },
+    {
+      autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
+      scrollTrigger: { trigger: '#extras', start: 'top 70%' }
+    }
+  );
+</script>

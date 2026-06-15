@@ -1,0 +1,115 @@
+---
+import { Mic, Video, Headphones, Users, Play } from '@lucide/astro';
+
+const features = [
+  { icon: Mic, label: 'Conversaciones <br/> auténticas' },
+  { icon: Video, label: 'Grabación <br/> profesional' },
+  { icon: Headphones, label: 'Audio de<br/> alta calidad' },
+  { icon: Users, label: 'Tus invitados <br/> protagonistas' },
+  { icon: Play, label: 'Recuerdo para <br/> toda la vida' },
+];
+const { headerMode = 'dark' } = Astro.props;
+---
+
+<section id="historia" data-header={headerMode} class="relative w-full">
+
+  <!-- Foto de fondo fullwidth -->
+  <img src="/img2.webp" alt="" class="absolute inset-0 w-full h-full object-cover object-center" />
+
+  <!-- Overlay oscuro con gradiente lateral para legibilidad -->
+  <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
+
+  <!-- Contenido -->
+  <div class="relative z-10 flex flex-col justify-between min-h-screen gap-10 px-8 md:px-16 py-16">
+
+    <!-- Texto principal (izquierda / arriba) -->
+    <div class="max-w-xl flex flex-col gap-6 pt-8 mb-16">
+
+      <span class="hist-star text-gold text-sm">✦</span>
+
+      <h2 class="hist-title text-cream font-[200] text-[clamp(2.2rem,5vw,4rem)] leading-[1.05] tracking-tight uppercase">
+        Tu historia<br />merece ser<br />
+        <span class="text-gold italic font-[300] italic">recordada</span>
+      </h2>
+
+      <p class="hist-desc text-cream font-light text-lg leading-relaxed max-w-xs">
+        Conservamos las voces, risas y emociones de tu boda en un podcast
+        <em class="text-gold italic font-bold">único e inolvidable.</em>
+      </p>
+
+      <p class="hist-cursive italic font-[200] text-[clamp(2.5rem,6vw,3.75rem)] mt-2 font-moon -rotate-12 bg-gradient-to-br from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] bg-clip-text text-transparent">
+        Escuchalo hoy,<br />revivelo siempre. ♥
+      </p>
+
+    </div>
+
+    <!-- Features bar (inferior) -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-auto">
+      {features.map((f) => (
+        <div class="hist-card flex flex-col items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-lg px-4 py-6">
+          <f.icon size={36} stroke="url(#gold-gradient)" />
+          <span class="text-cream text-md font-light tracking-wide text-center leading-snug" set:html={f.label}/>
+        </div>
+      ))}
+    </div>
+
+    <!-- SVG gradient definition -->
+    <svg class="absolute w-0 h-0" aria-hidden="true">
+      <defs>
+        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#BF953F" />
+          <stop offset="40%" stop-color="#FCF6BA" />
+          <stop offset="70%" stop-color="#B38728" />
+          <stop offset="100%" stop-color="#FBF5B7" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+  </div>
+
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const histTl = gsap.timeline({
+    scrollTrigger: { trigger: '#historia', start: 'top 70%' }
+  });
+
+  // Estrella: spin + scale
+  histTl.fromTo('.hist-star',
+    { autoAlpha: 0, scale: 0, rotation: -180 },
+    { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.6, ease: 'back.out(3)' }
+  );
+
+  // Título: reveal desde la izquierda con clip-path
+  histTl.fromTo('.hist-title',
+    { autoAlpha: 0, x: -60, clipPath: 'inset(0 100% 0 0)' },
+    { autoAlpha: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power4.out' },
+    '-=0.3'
+  );
+
+  // Descripción: fade up
+  histTl.fromTo('.hist-desc',
+    { autoAlpha: 0, y: 30 },
+    { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+    '-=0.5'
+  );
+
+  // Texto cursivo: aparece con rotación desde 0 a -12deg y scale
+  histTl.fromTo('.hist-cursive',
+    { autoAlpha: 0, scale: 0.6, rotation: 0 },
+    { autoAlpha: 1, scale: 1, rotation: -12, duration: 1, ease: 'elastic.out(1, 0.5)' },
+    '-=0.3'
+  );
+
+  // Cards: stagger con scale + fade desde abajo
+  histTl.fromTo('.hist-card',
+    { autoAlpha: 0, y: 50, scale: 0.85 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(1.5)' },
+    '-=0.5'
+  );
+</script>

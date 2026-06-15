@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@font-face {
+    font-family: "MoonTime";
+    src: url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.eot");
+    src: url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.eot?#iefix") format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/657bc16f9d9e1138aedc238e69ff1983.svg#MoonTime") format("svg");
+}
+@theme {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gold:  #C2964B;
+  --color-cream: #fbfbfb; 
+  --font-moon:"MoonTime";
+  --font-sans: 'Raleway', sans-serif;
+}
+
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+  }
+}

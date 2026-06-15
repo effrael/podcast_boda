@@ -1,23 +1,97 @@
+---
+import '../styles/global.css';
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>El podcast de tu Boda - Tu Podcast</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;600&display=swap" rel="stylesheet" />
 	</head>
 	<body>
+		<canvas class="mouse-trail fixed top-0 left-0 pointer-events-none z-[9999]"></canvas>
 		<slot />
+
+		<script>
+			const canvas = document.querySelector('.mouse-trail') as HTMLCanvasElement;
+			const ctx = canvas.getContext('2d')!;
+
+			const config = {
+				totalPoints: 15,
+				lineWidthFactor: 0.2,
+				springStrength: 0.5,
+				damping: 0.4,
+			};
+
+			const mouse = { x: 0, y: 0 };
+
+			const points = Array.from({ length: config.totalPoints }, () => ({
+				x: 0, y: 0, velocityX: 0, velocityY: 0
+			}));
+
+			function resize() {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+			resize();
+			window.addEventListener('resize', resize);
+			window.addEventListener('mousemove', (e) => {
+				mouse.x = e.clientX;
+				mouse.y = e.clientY;
+			});
+
+			function animate() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				const { springStrength, damping, lineWidthFactor, totalPoints } = config;
+
+				points.forEach((p, i) => {
+					const target = i === 0 ? mouse : points[i - 1];
+					const strength = i === 0 ? 0.4 * springStrength : springStrength;
+
+					p.velocityX += (target.x - p.x) * strength;
+					p.velocityY += (target.y - p.y) * strength;
+					p.velocityX *= damping;
+					p.velocityY *= damping;
+					p.x += p.velocityX;
+					p.y += p.velocityY;
+				});
+
+				const grad = ctx.createLinearGradient(
+					points[0].x, points[0].y,
+					points[points.length - 1].x, points[points.length - 1].y
+				);
+				grad.addColorStop(0, '#BF953F');
+				grad.addColorStop(0.4, '#FCF6BA');
+				grad.addColorStop(0.7, '#B38728');
+				grad.addColorStop(1, '#FBF5B7');
+
+				ctx.strokeStyle = grad;
+				ctx.lineCap = 'round';
+				ctx.beginPath();
+				ctx.moveTo(points[0].x, points[0].y);
+
+				points.slice(1, -1).forEach((p, i) => {
+					const next = points[i + 2];
+					const xc = (p.x + next.x) / 2;
+					const yc = (p.y + next.y) / 2;
+					ctx.quadraticCurveTo(p.x, p.y, xc, yc);
+					ctx.lineWidth = lineWidthFactor * (totalPoints - i);
+					ctx.stroke();
+				});
+
+				ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+				ctx.stroke();
+
+				requestAnimationFrame(animate);
+			}
+			animate();
+		</script>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

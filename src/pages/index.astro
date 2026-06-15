@@ -1,11 +1,71 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Hero from '../components/home/Hero.astro';
+import VideoSection from '../components/home/VideoSection.astro';
+import ConceptSection from '../components/home/ConceptSection.astro';
+import PlanesSection from '../components/home/PlanesSection.astro';
+import ExtrasSection from '../components/home/ExtrasSection.astro';
+import HistoriaSection from '../components/home/HistoriaSection.astro';
+import ContactSection from '../components/home/ContactSection.astro';
+import Footer from '../components/home/Footer.astro';
 ---
 
 <Layout>
-	<Welcome />
+  <Hero />
+  <VideoSection />
+  <ConceptSection />
+  <HistoriaSection />
+  <PlanesSection />
+  <ExtrasSection />
+  <ContactSection />
+  <Footer />
 </Layout>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Ocultar elementos del hero antes de animar
+  gsap.set(['.logo', '.brand', '.nav a', '.hero-text h1', '.btn-explore', '.quote', '.keep-scrolling'], {
+    autoAlpha: 0
+  });
+
+  // Animación entrada hero
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl
+    .to('.logo',             { autoAlpha: 1, scale: 1, duration: 0.7, transformOrigin: 'center' })
+    .fromTo('.brand',        { autoAlpha: 0, y: -12 }, { autoAlpha: 1, y: 0, duration: 0.6 }, '-=0.4')
+    .fromTo('.nav a',        { autoAlpha: 0, x: 20  }, { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.1 }, '-=0.4')
+    .fromTo('.hero-text h1', { autoAlpha: 0, y: 40  }, { autoAlpha: 1, y: 0, duration: 0.9 }, '-=0.3')
+    .fromTo('.btn-explore',  { autoAlpha: 0, y: 16  }, { autoAlpha: 1, y: 0, duration: 0.6 }, '-=0.5')
+    .fromTo('.quote',        { autoAlpha: 0, y: 20  }, { autoAlpha: 1, y: 0, duration: 0.7 }, '-=0.4')
+    .fromTo('.keep-scrolling', { autoAlpha: 0, scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 0.6 }, '-=0.5');
+
+  // Animación sección video al hacer scroll
+  gsap.fromTo('.video-title',
+    { autoAlpha: 0, y: 30 },
+    {
+      autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '.video-section', start: 'top 75%' }
+    }
+  );
+
+  gsap.fromTo('.video-wrapper',
+    { autoAlpha: 0, y: 40 },
+    {
+      autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.15,
+      scrollTrigger: { trigger: '.video-section', start: 'top 75%' }
+    }
+  );
+
+  gsap.fromTo('.star',
+    { autoAlpha: 0, scale: 0 },
+    {
+      autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(2)',
+      scrollTrigger: { trigger: '.video-section', start: 'top 70%' }
+    }
+  );
+</script>

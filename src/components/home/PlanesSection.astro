@@ -1,0 +1,142 @@
+---
+import { Clock, Camera, Mic, Radio, Users, Package, Send } from '@lucide/astro';
+
+const { headerMode = 'light' } = Astro.props;
+
+const planes = [
+  {
+    tag: null,
+    nombre: 'Esencial',
+    descripcion: 'Ideal para capturar mensajes más importantes de familiares y amigos cercanos.',
+    precio: '3,500',
+    features: [
+      { icon: Clock, label: '1 Hora de cobertura' },
+      { icon: Camera, label: '3 Cámaras Blackmagic' },
+      { icon: Mic, label: '4 Micrófonos Profesionales' },
+      { icon: Radio, label: 'Grabación continua multicámara' },
+      { icon: Users, label: 'Entrevistas a familiares e invitados' },
+      { icon: Package, label: 'Entrega del podcast editado' },
+    ],
+  },
+  {
+    tag: 'La más elegida',
+    nombre: 'Celebración',
+    descripcion: 'Perfecta para que más invitados compartan historias, anécdotas y momentos inolvidables',
+    precio: '5,000',
+    features: [
+      { icon: Clock, label: '2 Horas de cobertura' },
+      { icon: Camera, label: '3 Cámaras Blackmagic' },
+      { icon: Mic, label: '4 Micrófonos Profesionales' },
+      { icon: Radio, label: 'Grabación continua multicámara' },
+      { icon: Users, label: 'Mayor participación de invitados' },
+      { icon: Package, label: 'Entrega del podcast editado' },
+    ],
+  },
+];
+---
+
+<section id="planes" data-header={headerMode} class="bg-cream py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Header con copy emocional -->
+    <div class="mb-6 mx-auto">
+      <p class="text-gold text-2xl font-semibold text-center font-moon mb-2">Planes</p>
+      <h2 class="plan-el text-[#1a1a1a] font-[200] text-[clamp(2.2rem,5vw,4rem)] leading-[1.1] tracking-tight text-center">
+        PROPUESTA DE INVERSIÓN
+      </h2>
+    </div>
+    <p class="plan-el text-[#1a1a1a]/50 font-light text-base leading-relaxed text-center mb-16">
+      Elige la experiencia perfecta para conservar las voces de quienes más amas.
+    </p>
+
+    <!-- Grid planes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {planes.map((plan, i) => (
+        <div class={`plan-el group relative rounded-2xl transition-all duration-500
+          ${i === 1
+            ? 'p-[3px] border-[3px] border-black bg-gradient-to-br from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] shadow-[0_0_40px_rgba(194,150,75,0.1)]'
+            : 'bg-[#1a1a1a] text-cream border border-white/5'
+          }`}>
+        <div class={`flex flex-col gap-7 p-10 md:p-12 rounded-xl h-full
+          ${i === 1
+            ? 'bg-black text-cream'
+            : ''
+          }`}>
+
+          <!-- Tag popular -->
+          {plan.tag && (
+            <div class="absolute -top-3.5 left-10">
+              <span class="bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] text-black text-[0.6rem] tracking-[0.15em] uppercase px-4 py-1.5 font-normal rounded-full">
+                {plan.tag}
+              </span>
+            </div>
+          )}
+
+          <!-- Nombre -->
+          <div>
+            <p class={`text-[0.6rem] tracking-[0.25em] uppercase mb-1 ${i === 1 ? 'bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] bg-clip-text text-transparent' : 'text-cream/35'}`}>Experiencia</p>
+            <h3 class={`font-[200] text-3xl tracking-wide ${i === 1 ? 'bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] bg-clip-text text-transparent' : 'text-cream'}`}>
+              {plan.nombre}
+            </h3>
+          </div>
+
+          <!-- Precio -->
+          <div class="flex flex-col">
+            <span class={`text-sm font-light tracking-widest uppercase ${i === 1 ? 'text-gold' : 'text-cream/40'}`}>S/</span>
+            <span class={`font-bold text-[clamp(3.5rem,7vw,5.5rem)] leading-none tracking-tighter ${i === 1 ? 'text-cream' : 'text-cream'}`}>
+              {plan.precio}
+            </span>
+          </div>
+
+          <!-- Descripción -->
+          <p class={`text-base font-light leading-relaxed ${i === 1 ? 'text-cream/80' : 'text-cream/60'}`}>
+            {plan.descripcion}
+          </p>
+
+          <!-- Divisor -->
+          <div class={`w-full h-px ${i === 1 ? 'bg-gold/20' : 'bg-cream/8'}`}></div>
+
+          <!-- Features -->
+          <ul class="flex flex-col gap-3.5">
+            {plan.features.map(f => (
+              <li class={`flex items-center gap-3 text-base font-light ${i === 1 ? 'text-cream/90' : 'text-cream/80'}`}>
+                <f.icon size={20} class="text-gold shrink-0" />
+                {f.label}
+              </li>
+            ))}
+          </ul>
+
+          <!-- CTA botón -->
+          <a href="#contacto"
+            class={`mt-4 self-start inline-flex items-center gap-2 rounded-full px-5 py-2 text-base tracking-widest font-semibold transition-all duration-300
+              ${i === 1
+                ? 'bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] via-[#B38728] to-[#FBF5B7] text-black hover:opacity-90'
+                : 'bg-white text-black hover:bg-cream'
+              }`}>
+            Reservar ahora
+            <Send size={14} />
+          </a>
+
+        </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+
+ 
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.fromTo('.plan-el',
+    { autoAlpha: 0, y: 40 },
+    {
+      autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+      scrollTrigger: { trigger: '#planes', start: 'top 70%' }
+    }
+  );
+</script>

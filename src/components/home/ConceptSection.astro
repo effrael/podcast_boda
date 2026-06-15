@@ -1,0 +1,116 @@
+---
+const { headerMode = 'dark' } = Astro.props;
+---
+
+<div id="concept-pin" class="relative" data-header={headerMode}>
+  <section class="concept-section relative h-screen bg-[#0f0f0f] flex flex-col items-center justify-center overflow-hidden px-6">
+
+    <!-- Canvas de estrellas -->
+    <canvas id="stars-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+
+    <!-- Líneas decorativas -->
+    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-16 h-[1px] bg-gold opacity-30"></div>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-[1px] bg-gold opacity-30"></div>
+
+    <!-- Estrella superior -->
+    <span class="concept-star text-gold text-sm opacity-50 mb-8">✦</span>
+
+    <!-- Texto principal -->
+    <p class="concept-text text-center text-cream font-[200] text-[clamp(1.3rem,3.5vw,2.25rem)] leading-[1.6] max-w-4xl tracking-wide">
+      Los novios, sus familias y amigos se reúnen<br class="hidden md:inline" />
+      para compartir anécdotas, consejos, risas y<br class="hidden md:inline" />
+      emociones en una conversación que se<br class="hidden md:inline" />
+      convertirá en un <em class="not-italic text-[clamp(3.5rem,7vw,4.5rem)] leading-none md:leading-[1.6] text-gold font-normal font-moon">recuerdo para toda la vida</em>
+    </p>
+
+    <!-- Estrella inferior -->
+    <span class="concept-star text-gold text-sm opacity-50 mt-8">✦</span>
+
+  </section>
+</div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Pin: la sección se queda fija y la siguiente se superpone encima
+  ScrollTrigger.create({
+    trigger: '#concept-pin',
+    start: 'top top',
+    end: 'bottom top',
+    pin: '.concept-section',
+    pinSpacing: false,
+  });
+
+  // Animación de entrada del texto
+  gsap.fromTo('.concept-text',
+    { autoAlpha: 0, y: 40 },
+    {
+      autoAlpha: 1, y: 0, duration: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: '.concept-section', start: 'top 70%' }
+    }
+  );
+
+  gsap.fromTo('.concept-star',
+    { autoAlpha: 0, scale: 0 },
+    {
+      autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.2, ease: 'back.out(2)',
+      scrollTrigger: { trigger: '.concept-section', start: 'top 70%' }
+    }
+  );
+
+  // ── Estrellas animadas ──
+  const starCanvas = document.getElementById('stars-canvas') as HTMLCanvasElement;
+  const starCtx = starCanvas.getContext('2d')!;
+
+  function resizeStars() {
+    const section = starCanvas.parentElement!;
+    starCanvas.width = section.offsetWidth;
+    starCanvas.height = section.offsetHeight;
+  }
+  resizeStars();
+  window.addEventListener('resize', resizeStars);
+
+  interface Star { x: number; y: number; size: number; speed: number; opacity: number; }
+
+  const stars: Star[] = Array.from({ length: 80 }, () => ({
+    x: Math.random() * starCanvas.width,
+    y: Math.random() * starCanvas.height,
+    size: Math.random() * 2 + 0.5,
+    speed: Math.random() * 0.4 + 0.1,
+    opacity: Math.random() * 0.6 + 0.2,
+  }));
+
+  function animateStars() {
+    starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+
+    stars.forEach(star => {
+      // Movimiento diagonal (arriba-derecha)
+      star.x += star.speed * 0.6;
+      star.y -= star.speed * 0.4;
+
+      // Resetear si sale del canvas
+      if (star.x > starCanvas.width + 5) { star.x = -5; star.y = Math.random() * starCanvas.height; }
+      if (star.y < -5) { star.y = starCanvas.height + 5; star.x = Math.random() * starCanvas.width; }
+
+      // Parpadeo suave
+      const flicker = 0.5 + 0.5 * Math.sin(Date.now() * 0.002 + star.x);
+
+      // Dibujar estrella con brillo gold
+      starCtx.beginPath();
+      starCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      starCtx.fillStyle = `rgba(194, 150, 75, ${star.opacity * flicker})`;
+      starCtx.fill();
+
+      // Glow
+      starCtx.beginPath();
+      starCtx.arc(star.x, star.y, star.size * 2.5, 0, Math.PI * 2);
+      starCtx.fillStyle = `rgba(194, 150, 75, ${star.opacity * flicker * 0.15})`;
+      starCtx.fill();
+    });
+
+    requestAnimationFrame(animateStars);
+  }
+  animateStars();
+</script>

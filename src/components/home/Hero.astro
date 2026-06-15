@@ -1,0 +1,101 @@
+---
+import Header from "../Header.astro";
+import { ArrowRight, ArrowDown } from '@lucide/astro';
+const { headerMode = 'transparent' } = Astro.props;
+---
+
+<!-- Wrapper: imagen + fade, más alto que viewport -->
+<div class="relative w-full h-[130vh]" data-header={headerMode}>
+
+  <!-- Hero: 100vh con contenido -->
+  <main class="relative w-full h-screen overflow-hidden font-[Raleway] text-white">
+
+    <Header />
+
+    <!-- Background image -->
+    <img
+      src="/bg-hero.webp"
+      alt="Hero background"
+      class="absolute inset-0 w-full h-full object-cover object-center z-0"
+    />
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/25 z-[1]"></div>
+
+    <!-- Hero text center -->
+    <div class="absolute inset-0 z-[5] flex flex-col items-center justify-center text-center gap-7">
+      <h1 class="hero-el text-[clamp(4rem,8vw,6rem)] font-[200] leading-[1.05] tracking-tight">
+        El Podcast
+        <br /><span class="font-moon text-[clamp(6rem,10vw,8rem)]">de tu Boda</span>
+      </h1>
+      <a href="#experiencia"
+         class="hero-el inline-flex items-center gap-2 border border-white/60 rounded-full px-5 py-2 text-base tracking-widest font-semibold backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-colors no-underline">
+        Explorar más
+        <ArrowRight size={13} />
+      </a>
+    </div>
+
+    <!-- Quote bottom-left -->
+    <p class="hero-quote absolute bottom-16 md:bottom-7 left-7 z-10 font-light text-sm md:text-base leading-[1.7] text-white/85 max-w-[300px]">
+     Conservamos las voces, risas y emociones del día más importante de tu vida en un podcast profesional, único e inolvidable.
+    </p>
+
+    <!-- Keep scrolling bottom-right: completo en desktop, solo ícono en móvil -->
+    <div class="hero-scroll keep-scrolling absolute bottom-6 right-7 z-10 w-12 h-12 md:w-20 md:h-20 border border-white/50 rounded-full flex items-center justify-center cursor-pointer">
+      <svg viewBox="0 0 36 36" class="absolute inset-0 w-full h-full hidden md:block">
+        <path id="circlePath" d="M 18,18 m -13,0 a 13,13 0 1,1 26,0 a 13,13 0 1,1 -26,0" fill="none"/>
+        <text font-size="4.5" fill="white" letter-spacing="1.2">
+          <textPath href="#circlePath">Seguir bajando • Seguir bajando •</textPath>
+        </text>
+      </svg>
+      <ArrowDown size={18} class="arrow-down absolute text-white" />
+    </div>
+
+  </main>
+
+  <!-- Imagen extendida debajo del hero (continúa la foto) -->
+  <div class="absolute top-0 left-0 w-full h-full z-0">
+    <img src="/bg-hero.webp" alt="" class="w-full h-full object-cover object-center" />
+    <div class="absolute inset-0 bg-black/15"></div>
+  </div>
+
+  <!-- Fade inferior: empieza debajo del 100vh -->
+  <div class="absolute bottom-0 left-0 right-0 h-[35%] z-[4] pointer-events-none"
+       style="background: linear-gradient(to bottom, transparent 0%, rgba(251,251,251,0.4) 40%, rgba(251,251,251,0.75) 65%, #fbfbfb 100%);">
+  </div>
+
+</div>
+
+<style>
+  .keep-scrolling { animation: spin 12s linear infinite; }
+  .arrow-down     { animation: spin-reverse 12s linear infinite; }
+
+  @keyframes spin         { to { transform: rotate(360deg); } }
+  @keyframes spin-reverse { to { transform: rotate(-360deg); } }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const tl = gsap.timeline({ delay: 0.3 });
+
+  // Título y botón: fade up con stagger
+  tl.fromTo('.hero-el',
+    { autoAlpha: 0, y: 40 },
+    { autoAlpha: 1, y: 0, duration: 1, stagger: 0.25, ease: 'power3.out' }
+  );
+
+  // Quote bottom-left: fade in desde la izquierda
+  tl.fromTo('.hero-quote',
+    { autoAlpha: 0, x: -30 },
+    { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power3.out' },
+    '-=0.4'
+  );
+
+  // Keep scrolling: fade in con scale
+  tl.fromTo('.hero-scroll',
+    { autoAlpha: 0, scale: 0.5 },
+    { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' },
+    '-=0.4'
+  );
+</script>

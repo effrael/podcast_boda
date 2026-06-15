@@ -1,0 +1,333 @@
+---
+import { SendHorizontal, User, Phone, AtSign, Eye } from '@lucide/astro';
+const { headerMode = 'light' } = Astro.props;
+---
+
+<section id="contacto" data-header={headerMode} class="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+
+  <!-- Lado izquierdo: formulario -->
+  <div class="bg-cream flex flex-col justify-center px-10 md:px-16 py-20 gap-10">
+
+    <!-- Título -->
+    <div>
+      <p class="ct-subtitle text-gold text-2xl font-semibold font-moon mb-2">Contacto</p>
+      <h2 class="ct-title text-[#1a1a1a] font-[200] text-[clamp(1.8rem,3vw,2.6rem)] leading-tight tracking-tight">
+        HABLEMOS DE TU BODA
+      </h2>
+    </div>
+
+    <!-- Formulario -->
+    <form class="flex flex-col gap-7" novalidate>
+
+      <!-- Nombre -->
+      <div class="contact-field flex flex-col gap-1.5">
+        <label for="nombre" class="flex items-center gap-2 text-base font-semibold text-[#1a1a1a]"><User size={16} class="text-gold" /> ¿Cuál es tu nombre?</label>
+        <input
+          id="nombre" name="nombre" type="text" required
+          placeholder="Tu nombre"
+          class="contact-input bg-transparent border border-transparent border-b-[#1a1a1a]/20 rounded-lg px-3 py-2 text-sm font-light text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 outline-none focus:border-gold focus:shadow-[0_0_15px_rgba(194,150,75,0.2)] transition-all duration-300"
+        />
+        <span class="error-msg text-red-500 text-xs hidden">Este campo es obligatorio</span>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="contact-field flex flex-col gap-1.5">
+        <label for="telefono" class="flex items-center gap-2 text-base font-semibold text-[#1a1a1a]"><Phone size={16} class="text-gold" /> ¿Te llamamos?</label>
+        <input
+          id="telefono" name="telefono" type="tel" required
+          placeholder="Tu número"
+          class="contact-input bg-transparent border border-transparent border-b-[#1a1a1a]/20 rounded-lg px-3 py-2 text-sm font-light text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 outline-none focus:border-gold focus:shadow-[0_0_15px_rgba(194,150,75,0.2)] transition-all duration-300"
+        />
+        <span class="error-msg text-red-500 text-xs hidden">Este campo es obligatorio</span>
+      </div>
+
+      <!-- Email -->
+      <div class="contact-field flex flex-col gap-1.5">
+        <label for="email" class="flex items-center gap-2 text-base font-semibold text-[#1a1a1a]"><AtSign size={16} class="text-gold" /> Tu correo electrónico</label>
+        <input
+          id="email" name="email" type="email" required
+          placeholder="hola@tucorreo.com"
+          class="contact-input bg-transparent border border-transparent border-b-[#1a1a1a]/20 rounded-lg px-3 py-2 text-sm font-light text-[#1a1a1a] placeholder:text-[#1a1a1a]/30 outline-none focus:border-gold focus:shadow-[0_0_15px_rgba(194,150,75,0.2)] transition-all duration-300"
+        />
+        <span class="error-msg text-red-500 text-xs hidden">Este campo es obligatorio</span>
+      </div>
+
+      <!-- Cómo nos encontraste: custom select -->
+      <div class="contact-field flex flex-col gap-1.5">
+        <label class="flex items-center gap-2 text-base font-semibold text-[#1a1a1a]"><Eye size={16} class="text-gold" /> ¿Cómo nos encontraste?</label>
+
+        <div id="custom-select" class="relative">
+          <!-- Trigger -->
+          <button type="button" id="select-trigger"
+            class="w-full flex items-center justify-between border-b border-[#1a1a1a]/20 py-2 text-sm font-light text-[#1a1a1a]/40 transition-colors duration-300 bg-transparent text-left">
+            <span id="select-label">Selecciona una opción</span>
+            <svg id="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform duration-300 shrink-0">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+
+          <!-- Opciones -->
+          <ul id="select-options"
+            class="mt-1 border border-[#1a1a1a]/10 shadow-md overflow-hidden bg-white rounded-lg"
+            style="max-height:0; opacity:0; pointer-events:none; transition: max-height 0.3s ease, opacity 0.2s ease; background-color:#fbfbfb;">
+            {['Instagram','TikTok','Google','Recomendación','Otro'].map(op => (
+              <li data-value={op.toLowerCase()}
+                class="select-option px-4 py-2.5 text-sm font-light text-[#1a1a1a]/70 hover:text-gold hover:bg-[#1a1a1a]/5 cursor-pointer transition-colors">
+                {op}
+              </li>
+            ))}
+          </ul>
+
+          <!-- Input oculto para el form -->
+          <input type="hidden" id="select-value" name="como_encontraste" />
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        class="contact-field mt-2  self-start inline-flex items-center gap-2 bg-[#1a1a1a] rounded-full px-7 py-3 text-base tracking-widest font-bold text-white hover:bg-gradient-to-r hover:from-[#BF953F] hover:via-[#FCF6BA] hover:via-[#B38728] hover:to-[#FBF5B7] hover:text-black transition-all duration-300 cursor-pointer">
+        Enviar mensaje
+        <SendHorizontal size={14} class="-rotate-45" />
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- Lado derecho: foto -->
+  <div class="ct-photo relative min-h-[50vh] md:min-h-full overflow-hidden">
+    <img
+      src="/img_4.webp"
+      alt="Pareja de novios"
+      class="absolute inset-0 w-full h-full object-cover object-right grayscale"
+    />
+    <div class="absolute inset-0 bg-black/20"></div>
+  </div>
+
+</section>
+ <!-- Banner inferior oscuro con cita -->
+  <div class="relative bg-[#0a0a0a] py-16 px-6 overflow-hidden">
+
+    <!-- Línea horizontal superior -->
+    <hr class="absolute top-0 left-0 right-0 border-0 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+    <!-- Línea horizontal inferior -->
+    <hr class="absolute bottom-0 left-0 right-0 border-0 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+    <!-- Esquinas decorativas -->
+    <svg class="absolute top-2 left-4 w-8 h-8 text-gold/30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="0.5">
+      <path d="M0 30 L0 8 Q0 0 8 0 L30 0"/>
+    </svg>
+    <svg class="absolute top-2 right-4 w-8 h-8 text-gold/30 scale-x-[-1]" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="0.5">
+      <path d="M0 30 L0 8 Q0 0 8 0 L30 0"/>
+    </svg>
+    <svg class="absolute bottom-2 left-4 w-8 h-8 text-gold/30 scale-y-[-1]" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="0.5">
+      <path d="M0 30 L0 8 Q0 0 8 0 L30 0"/>
+    </svg>
+    <svg class="absolute bottom-2 right-4 w-8 h-8 text-gold/30 scale-[-1]" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="0.5">
+      <path d="M0 30 L0 8 Q0 0 8 0 L30 0"/>
+    </svg>
+
+    <div class="relative z-10 flex flex-col items-center gap-5">
+
+      <!-- Comillas decorativas -->
+      <span class="ct-banner text-gold/30 text-4xl leading-none italic">"</span>
+
+      <!-- Contenido con laureles y líneas horizontales -->
+      <div class="ct-banner flex items-center justify-center w-full">
+
+        <!-- Línea horizontal izquierda -->
+        <hr class="hidden md:block flex-1 border-0 h-[2px] bg-gradient-to-r from-transparent to-gold/40" />
+
+        <!-- Laurel izquierdo -->
+        <img src="/deco_left.webp" alt="" class="hidden md:block h-16 w-auto object-contain mx-4" />
+
+        <!-- Texto central -->
+        <p class="text-cream/90 italic font-[200] text-base md:text-lg text-center leading-relaxed shrink-0">
+          Cada boda es <span class="text-cream font-[500] italic text-gold">única</span>.<br />
+          Tu podcast también <span class="text-cream font-[500] italic text-gold">debería serlo</span>.
+        </p>
+
+        <!-- Laurel derecho -->
+        <img src="/deco_left.webp" alt="" class="hidden md:block h-16 w-auto object-contain scale-x-[-1] mx-4" />
+
+        <!-- Línea horizontal derecha -->
+        <hr class="hidden md:block flex-1 border-0 h-[2px] bg-gradient-to-l from-transparent to-gold/40" />
+
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const ctTl = gsap.timeline({
+    scrollTrigger: { trigger: '#contacto', start: 'top 70%' }
+  });
+
+  // Subtítulo "Contacto": fade con clip desde izquierda
+  ctTl.fromTo('.ct-subtitle',
+    { autoAlpha: 0, x: -40, clipPath: 'inset(0 100% 0 0)' },
+    { autoAlpha: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power4.out' }
+  );
+
+  // Título: fade up
+  ctTl.fromTo('.ct-title',
+    { autoAlpha: 0, y: 30 },
+    { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+    '-=0.3'
+  );
+
+  // Campos del formulario: stagger con slide desde izquierda
+  ctTl.fromTo('.contact-field',
+    { autoAlpha: 0, x: -30 },
+    { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out' },
+    '-=0.3'
+  );
+
+  // Foto: reveal con clip-path
+  ctTl.fromTo('.ct-photo',
+    { clipPath: 'inset(0 0 100% 0)' },
+    { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power4.inOut' },
+    0.3
+  );
+
+  // Banner: comillas y texto
+  gsap.fromTo('.ct-banner',
+    { autoAlpha: 0, y: 20, scale: 0.95 },
+    {
+      autoAlpha: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+      scrollTrigger: { trigger: '.ct-banner', start: 'top 85%' }
+    }
+  );
+
+  // ── Custom select ──
+  const trigger  = document.getElementById('select-trigger')!;
+  const options  = document.getElementById('select-options') as HTMLElement;
+  const label    = document.getElementById('select-label')!;
+  const arrow    = document.getElementById('select-arrow')!;
+  const hidden   = document.getElementById('select-value') as HTMLInputElement;
+  const border   = trigger.closest('#custom-select')!;
+  let open = false;
+
+  function openSelect() {
+    open = true;
+    options.style.maxHeight = '200px';
+    options.style.opacity   = '1';
+    options.style.pointerEvents = 'auto';
+    arrow.style.transform   = 'rotate(180deg)';
+    trigger.style.borderColor = '#ffb600';
+  }
+
+  function closeSelect() {
+    open = false;
+    options.style.maxHeight = '0';
+    options.style.opacity   = '0';
+    options.style.pointerEvents = 'none';
+    arrow.style.transform   = 'rotate(0deg)';
+    trigger.style.borderColor = '';
+  }
+
+  trigger.addEventListener('click', () => open ? closeSelect() : openSelect());
+
+  document.querySelectorAll('.select-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const val = (opt as HTMLElement).dataset.value ?? '';
+      hidden.value  = val;
+      label.textContent = opt.textContent;
+      label.classList.remove('text-[#1a1a1a]/40');
+      label.classList.add('text-[#1a1a1a]');
+      closeSelect();
+    });
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', e => {
+    if (!border.contains(e.target as Node)) closeSelect();
+  });
+
+  // ── Validación en blur ──
+  document.querySelectorAll<HTMLInputElement>('.contact-input').forEach(input => {
+    input.addEventListener('blur', () => {
+      const error = input.nextElementSibling as HTMLElement;
+      if (!input.value.trim()) {
+        input.classList.add('border-red-500');
+        input.classList.remove('border-transparent', 'border-b-[#1a1a1a]/20');
+        error?.classList.remove('hidden');
+      } else {
+        input.classList.remove('border-red-500');
+        input.classList.add('border-transparent', 'border-b-[#1a1a1a]/20');
+        error?.classList.add('hidden');
+      }
+    });
+  });
+
+  // ── Submit: validar + fetch ──
+  const form = document.querySelector('#contacto form') as HTMLFormElement;
+  const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const inputs = form.querySelectorAll<HTMLInputElement>('.contact-input');
+    let valid = true;
+
+    inputs.forEach(input => {
+      const error = input.nextElementSibling as HTMLElement;
+      if (!input.value.trim()) {
+        input.classList.add('border-red-500');
+        input.classList.remove('border-transparent', 'border-b-[#1a1a1a]/20');
+        error?.classList.remove('hidden');
+        valid = false;
+      }
+    });
+
+    if (!valid) return;
+
+    // Estado de carga
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Enviando...';
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-70');
+
+    try {
+      const data = {
+        nombre: (form.querySelector('#nombre') as HTMLInputElement).value,
+        telefono: (form.querySelector('#telefono') as HTMLInputElement).value,
+        email: (form.querySelector('#email') as HTMLInputElement).value,
+        como_encontraste: hidden.value,
+      };
+
+      await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      // Éxito
+      form.reset();
+      label.textContent = 'Selecciona una opción';
+      label.classList.add('text-[#1a1a1a]/40');
+      label.classList.remove('text-[#1a1a1a]');
+      hidden.value = '';
+      submitBtn.innerHTML = '¡Mensaje enviado! ✓';
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70');
+      }, 3000);
+
+    } catch {
+      submitBtn.innerHTML = 'Error, intenta de nuevo';
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70');
+      }, 3000);
+    }
+  });
+</script>
